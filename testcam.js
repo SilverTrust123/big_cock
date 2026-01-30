@@ -7,14 +7,15 @@ async function fetchPersonCount() {
         
         const data = await response.json();
         console.log("偵錯用 - 完整資料內容:", data); 
-        const count = data.personCount ?? data.person_count ?? data.count ?? data.PersonCount ?? 0;
-        
-        // 更新 UI
+
+        // 先檢查是不是陣列，有資料再抓第一筆
+        const first = Array.isArray(data) && data.length > 0 ? data[0] : null;
+
+        const count = first?.personCount ?? 0;
         document.getElementById('personCount').innerText = count;
 
-        // 更新狀態
         const statusEl = document.getElementById('systemStatus');
-        const isDanger = data.danger ?? data.is_danger ?? false;
+        const isDanger = first?.danger ?? false;
 
         if (isDanger) {
             statusEl.innerText = "狀態：有人入侵";
@@ -24,8 +25,7 @@ async function fetchPersonCount() {
             statusEl.className = "status-text";
         }
 
-        // 更新更新時間
-        const timeStr = data.timestamp ? data.timestamp.split('T')[1] : "N/A";
+        const timeStr = first?.timestamp ? first.timestamp.split('T')[1] : "N/A";
         document.getElementById('updateTime').innerText = `最後更新時間：${timeStr}`;
 
     } catch (error) {
