@@ -1,0 +1,203 @@
+/* =============================
+   全域設定
+============================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(135deg,#cfe1e3 0%,#e7eff1 40%,#cfdde0 100%);
+    overflow: hidden;
+    
+}
+
+/* =============================
+   主容器
+============================= */
+.main-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 防止內容撐破螢幕產生捲軸 */
+}
+
+/* =============================
+   上方區塊
+============================= */
+.top-section {
+    padding: 0px 70px 20px;
+    background: linear-gradient(180deg,#7fa7aa 0%,#6b9498 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-main-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* LOGO */
+.brand-logo {
+    /* 1. 更換字體：圖 1 是襯線體，建議使用 Georgia 或 Times New Roman */
+    font-family: "Georgia", "Times New Roman", serif;
+    
+    font-size: 80px;
+    font-weight: 900;
+    color: #ffffff;
+    
+    /* 2. 縮小間距：圖 1 的字母靠得很近，甚至有點重疊 */
+    letter-spacing: -3px; 
+    
+    /* 3. 加強陰影：圖 1 的陰影更深（Alpha更高）、位移更明顯 */
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.8); 
+}
+
+/* ===== 導覽 ===== */
+.header-main-row {
+    display: flex;
+    align-items: center; /* ⭐關鍵 */
+    justify-content: space-between;
+}
+.header-divider {
+    width: 100%;
+    height: 3px;
+    background: #214954;
+    margin: 8px 0 10px 0;
+}
+
+.nav-menu {
+    display: flex;
+    align-items:end;
+    /* 1. 調低背景透明度，圖 1 看起來更透明一點 */
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 6px;
+    padding: 2px; /* 縮小內邊距，讓 active 背景更貼邊 */
+    gap: 4px;    /* 控制按鈕之間的固定間距 */
+}
+
+.nav-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 16px; /* 圖 1 的字體看起來稍微小一點，更精緻 */
+    font-weight: 500;
+    padding: 4px 12px; /* 調整內邊距，讓按鈕看起來比較長方形 */
+    cursor: pointer;
+    border-radius: 4px; /* 給所有按鈕圓角，hover 時才好看 */
+    transition: background 0.2s; /* 讓 hover 效果更平滑 */
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.active-tab {
+    /* 2. 圖 1 的選中狀態是深色接近純黑 */
+    background: #333333 !important; 
+    color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* 增加一點點陰影增加立體感 */
+}
+
+.nav-divider {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 60px; /* 分隔線左右的間距 */
+}
+
+/* 中間白框主容器 */
+.content-wrapper {
+    flex: 1; /* 重要：自動填滿剩餘高度 */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #ffffff;
+    margin: 15px 30px 20px 30px; /* 稍微縮小間距 */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden; /* 確保內容不超出白框 */
+}
+
+/* 左側圖片縮放控制 */
+.machine-section {
+    flex: 1.5;
+}
+.machine-image {
+    width: 100%;
+    max-height: 65vh;
+    object-fit: contain; /* 確保圖片比例不失真 */
+}
+
+/* 中間菱形指示燈 */
+.indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 30px;
+}
+.diamond {
+    width: 35px;
+    height: 35px;
+    transform: rotate(45deg);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+.light-blue { background-color: #a0f0f0; }
+.orange     { background-color: #ffab91; }
+.yellow     { background-color: #fff59d; }
+.green      { background-color: #b9f6ca; }
+
+/* 右側看板定位 */
+/* 1. 確保左右區塊比例相等 (1:1) */
+.machine-section {
+    flex: 6; /* 比例設為 6 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.board-section {
+    flex: 4;          /* 強制兩邊各佔一半剩餘空間 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;     /* 確保高度一致 */
+    position: relative; /* 防止圖片溢出 */
+}
+
+/* 2. 統一圖片的縮放邏輯 */
+.machine-image, 
+.board-image {
+    width: 100%;
+    height: 100%;
+    max-height: 75vh; /* 確保不超過畫面高度 */
+    object-fit: contain; /* 這是關鍵：讓整張圖完整縮放在框內，不被裁切 */
+}
+
+/* 3. 修正右側容器定位，確保文字能正確浮動 */
+.board-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* 4. 確保中間指示燈不被擠壓 */
+.status-indicators {
+    flex: 0 0 60px;   /* 給予固定寬度，不參與縮放 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    z-index: 20;      /* 確保在圖片上方 */
+}

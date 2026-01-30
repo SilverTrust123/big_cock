@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專題</title>
+    <link rel="stylesheet" href="mainUI.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <header class="top-section">
+            <div class="header-main-row">
+                <h1 class="brand-logo">name</h1>
+                
+                <nav class="nav-menu">
+                    <a href="index.html" class="nav-btn active-tab">HomePage</a>
+                    <div class="nav-divider"></div>
+                    <a href="productline.html" class="nav-btn">ProductLine</a>
+                    <div class="nav-divider"></div>
+                    <a href="history.html" class="nav-btn">HistoryData</a>
+                    <div class="nav-divider"></div>
+                    <a href="page2.html" class="nav-btn">Annie Sprat,</a>
+                    <div class="nav-divider"></div>
+                    <a href="page2.html" class="nav-btn">Nahil Naseer</a>
+                </nav>
+            </div>
+            <div class="header-divider"></div>
+            <div class="status-summary-bar">
+                <div class="summary-item">
+                    <p class="summary-label">運轉狀態</p>
+                    <p class="summary-val"><span class="v-green">yes</span> / <span class="v-red">no</span></p>
+                </div>
+                <div class="summary-item">
+                    <p class="summary-label">設備連接</p>
+                    <p class="summary-val"><span class="v-green">yes</span> / <span class="v-red">no</span></p>
+                </div>
+                <div class="summary-item">
+                    <p class="summary-label">製程時間</p>
+                    <p class="summary-val v-orange" id="process-timer">00:03:00</p>
+                </div>
+                <div class="summary-item">
+                    <p class="summary-label2">金屬</p>
+                    <p class="summary-label2">當前產量/目標產量</p>
+                    <p class="summary-val">
+                        <span class="v-blue">200000</span> <span class="v-yellow">999999</span>
+                    </p>
+                </div>
+                <div class="summary-item">
+                    <p class="summary-label2">非金屬</p>
+                    <p class="summary-label2">當前產量/目標產量</p>
+                    <p class="summary-val">
+                        <span class="v-blue">200000</span> <span class="v-yellow">999999</span>
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <main class="middle-section">
+            <div class="gauges-flex-container">
+                <div class="gauge-card">
+                    <h2 class="gauge-title g-temp-text">temperature</h2>
+                    <div class="gauge-svg-wrapper">
+                        <svg viewBox="0 0 100 60">
+                            <path class="gauge-base-ring" d="M10,50 A40,40 0 1,1 90,50" />
+                            <path id="temp-fill" class="gauge-active-ring g-temp-stroke" d="M10,50 A40,40 0 1,1 90,50" />
+                        </svg>
+                        <div class="gauge-value g-temp-text" id="temp-display">23.8°C</div>
+                    </div>
+                </div>
+
+                <div class="gauge-card">
+                    <h2 class="gauge-title g-humi-text">humidity</h2>
+                    <div class="gauge-svg-wrapper">
+                        <svg viewBox="0 0 100 60">
+                            <path class="gauge-base-ring" d="M10,50 A40,40 0 1,1 90,50" />
+                            <path id="humi-fill" class="gauge-active-ring g-humi-stroke" d="M10,50 A40,40 0 1,1 90,50" />
+                        </svg>
+                        <div class="gauge-value g-humi-text" id="humi-display">46.9%</div>
+                    </div>
+                </div>
+
+                <div class="gauge-card">
+                    <h2 class="gauge-title g-co2-text">CO2</h2>
+                    <div class="gauge-svg-wrapper">
+                        <svg viewBox="0 0 100 60">
+                            <path class="gauge-base-ring" d="M10,50 A40,40 0 1,1 90,50" />
+                            <path id="co2-fill" class="gauge-active-ring g-co2-stroke" d="M10,50 A40,40 0 1,1 90,50" />
+                        </svg>
+                        <div class="gauge-value g-co2-text" id="co2-display">530.0 ppm</div>
+                    </div>
+                </div>
+
+                <div class="gauge-card">
+                    <h2 class="gauge-title g-pm-text">pollution</h2>
+                    <div class="gauge-svg-wrapper">
+                        <svg viewBox="0 0 100 60">
+                            <path class="gauge-base-ring" d="M10,50 A40,40 0 1,1 90,50" />
+                            <path id="pm-fill" class="gauge-active-ring g-pm-stroke" d="M10,50 A40,40 0 1,1 90,50" />
+                        </svg>
+                        <div class="gauge-value g-pm-text" id="pm-display">0.0 μg/m³</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+<footer class="bottom-section">
+    <div class="device-status-list">
+        <div class="device-item">
+            <p class="device-name">輸送帶1</p>
+            <div class="device-thumb" style="background-image: url('machine1.png')"></div>
+            <div id="lamp-0" class="status-lamp lamp-fail">×</div>
+        </div>
+        <div class="device-item">
+            <p class="device-name">滑台缸機械臂</p>
+            <div class="device-thumb" style="background-image: url('machine2.png')"></div>
+            <div id="lamp-1" class="status-lamp lamp-fail">×</div>
+        </div>
+        <div class="device-item">
+            <p class="device-name">龍門機械臂</p>
+            <div class="device-thumb" style="background-image: url('machine3.png')"></div>
+            <div id="lamp-2" class="status-lamp lamp-fail">×</div>
+        </div>
+        <div class="device-item">
+            <p class="device-name">輸送帶2</p>
+            <div class="device-thumb" style="background-image: url('machine4.png')"></div>
+            <div id="lamp-3" class="status-lamp lamp-fail">×</div>
+        </div>
+        <div class="device-item">
+            <p class="device-name">旋轉缸機械臂</p>
+            <div class="device-thumb" style="background-image: url('machine5.png')"></div>
+            <div id="lamp-4" class="status-lamp lamp-fail">×</div>
+        </div>
+    </div>
+</footer>
+    </div>
+    <script src="mainUI.js"></script>
+</body>
+</html>

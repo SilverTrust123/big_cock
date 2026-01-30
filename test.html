@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>機台連線監控</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 20px; background: #f0f2f5; }
+        .panel { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 420px; }
+        .btn { padding: 12px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 8px; margin: 5px; color: white; transition: 0.2s; }
+        .btn-on { background-color: #28a745; }
+        .btn-off { background-color: #dc3545; }
+        .btn-poll-start { background-color: #007bff; }
+        .btn-poll-stop { background-color: #6c757d; }
+        .section { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; text-align: left; }
+        #status { color: #666; font-size: 14px; margin-top: 10px; }
+        #machine-data { 
+            background: #272822; color: #f8f8f2; padding: 15px; border-radius: 8px; margin-top: 10px;
+            font-family: 'Courier New', monospace; word-break: break-all; min-height: 60px; overflow-y: auto; max-height: 200px;
+        }
+        /* 狀態燈號樣式 */
+        .indicator { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #ccc; margin-right: 8px; vertical-align: middle; }
+        .active { background: #28a745; box-shadow: 0 0 8px #28a745; }
+        .poll-text { font-size: 14px; color: #555; vertical-align: middle; }
+    </style>
+</head>
+<body>
+
+    <div class="panel">
+        <h2>機台控制 (ID: TEST)</h2>
+        <button class="btn btn-on" onclick="sendTestSignal(true)">啟動 (ON)</button>
+        <button class="btn btn-off" onclick="sendTestSignal(false)">停止 (OFF)</button>
+        <p id="status">等待指令...</p>
+
+        <div class="section">
+            <h3>即時狀態輪詢</h3>
+            <button class="btn btn-poll-start" onclick="startPolling()">開啟輪詢</button>
+            <button class="btn btn-poll-stop" onclick="stopPolling()">關閉輪詢</button>
+            <div style="margin-top: 10px;">
+                <span id="dot" class="indicator"></span>
+                <span id="poll-msg" class="poll-text">輪詢狀態：未啟動</span>
+            </div>
+            <div id="machine-data">等待資料中...</div>
+        </div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>

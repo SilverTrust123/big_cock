@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設備歷史數據監控</title>
+    <link rel="stylesheet" href="history.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>歷史數據</h1>
+        <a href="index.html" class="back-btn">← 返回即時儀表板</a>
+    </div>
+
+    <div class="chart-card">
+        <div class="btn-group">
+            <button class="filter-btn active" data-type="temperature">溫度 (°C)</button>
+            <button class="filter-btn" data-type="humidity">濕度 (%)</button>
+            <button class="filter-btn" data-type="pollution">污染 (µg/m³)</button>
+        </div>
+        <canvas id="historyChart" height="100"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h3>最近 10 次異常紀錄</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>時間戳記</th>
+                    <th>監測項目</th>
+                    <th>數值</th>
+                    <th>狀態</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="history.js"></script>
+</body>
+</html>
