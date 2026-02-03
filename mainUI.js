@@ -1,116 +1,127 @@
-//半圓儀錶板
-/**
- * 初始化單一儀表
- */
+// --- 1. 半圓儀錶板核心邏輯 ---
+
+/** 取得 SVG 路徑總長度並初始化設定 */
 function setupGauge(id) {
     const ring = document.getElementById(id);
     if (!ring) return null;
 
     const length = ring.getTotalLength();
-
     ring.style.strokeDasharray = length;
-    ring.style.strokeDashoffset = length;
+    ring.style.strokeDashoffset = length; 
     ring.style.transition = "stroke-dashoffset 1s ease";
-
     return length;
 }
 
-/**
- * 更新半圓儀表
- * @param {string} id - SVG Path ID
- * @param {number} value - 當前數值
- * @param {number} max - 最大值
- * @param {number} length - path總長度
- */
+/** 依照數值百分比更新填充長度 */
 function updateGauge(id, value, max, length) {
     const ring = document.getElementById(id);
-    if (!ring) return;
+    if (!ring || !length) return;
 
     const ratio = Math.max(0, Math.min(value / max, 1));
     const offset = length * (1 - ratio);
-
     ring.style.strokeDashoffset = offset;
 }
 
-/**
- * 初始化整個儀表板
- */
+// --- 2. 初始化與數據更新 ---
+
 function initUI() {
-    // 取得各自path長度
     const tempLen = setupGauge("temp-fill");
     const humiLen = setupGauge("humi-fill");
     const co2Len  = setupGauge("co2-fill");
     const pmLen   = setupGauge("pm-fill");
 
-    // 初始數值
     let temp = 23.8;
     let humi = 46.9;
     let co2  = 530;
     let pm   = 0;
 
-    // 初始顯示
-    document.getElementById("temp-display").innerText = temp.toFixed(1) + "°C";
-    document.getElementById("humi-display").innerText = humi.toFixed(1) + "%";
-    document.getElementById("co2-display").innerText  = co2.toFixed(1) + " ppm";
-    document.getElementById("pm-display").innerText   = pm.toFixed(1) + " μg/m³";
-
-    updateGauge("temp-fill", temp, 50, tempLen);
-    updateGauge("humi-fill", humi, 100, humiLen);
-    updateGauge("co2-fill",  co2, 1000, co2Len);
-    updateGauge("pm-fill",   pm, 100, pmLen);
-
-    // 模擬資料更新（每 5 秒）
-    setInterval(() => {
-        temp = 22 + Math.random() * 4;
-        humi = 40 + Math.random() * 20;
-        co2  = 450 + Math.random() * 300;
-        pm   = Math.random() * 15;
-
+    const refreshData = () => {
+        // 更新文字
         document.getElementById("temp-display").innerText = temp.toFixed(1) + "°C";
         document.getElementById("humi-display").innerText = humi.toFixed(1) + "%";
         document.getElementById("co2-display").innerText  = co2.toFixed(1) + " ppm";
         document.getElementById("pm-display").innerText   = pm.toFixed(1) + " μg/m³";
 
+        // 更新圓環動畫
         updateGauge("temp-fill", temp, 50, tempLen);
         updateGauge("humi-fill", humi, 100, humiLen);
         updateGauge("co2-fill",  co2, 1000, co2Len);
         updateGauge("pm-fill",   pm, 100, pmLen);
+
+        // 儲存數據到 localStorage
+        const now = new Date();
+        const timeLabel = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        
+        let historyData = JSON.parse(localStorage.getItem('sensorHistory')) || [];
+        historyData.push({
+            time: timeLabel,
+            temp: temp.toFixed(1),
+            humi: humi.toFixed(1),
+            co2: co2.toFixed(1),
+            pm: pm.toFixed(1)
+        });
+
+        if (historyData.length > 20) historyData.shift();
+        localStorage.setItem('sensorHistory', JSON.stringify(historyData));
+    };
+
+    refreshData();
+
+    setInterval(() => {
+        temp = 22 + Math.random() * 4;
+        humi = 40 + Math.random() * 20;
+        co2  = 450 + Math.random() * 300;
+        pm   = Math.random() * 15;
+        refreshData();
     }, 5000);
 }
 
-window.addEventListener("load", initUI);
+// --- 3. 設備燈號邏輯 ---
 
-
-//機械亮燈圈圈叉叉
-/**
- * 更新設備狀態燈
- * @param {number} activeIndex - 目前正在運作的設備索引 (0-4)
- */
+/** 設備狀態燈更新 */
 function updateActiveDevice(activeIndex) {
-    const totalDevices = 5; // 總共有 5 個設備
+    const totalDevices = 5; 
+    let anyRunning = false; // 👈 是否有任一台在跑
 
     for (let i = 0; i < totalDevices; i++) {
         const lamp = document.getElementById(`lamp-${i}`);
+        if (!lamp) continue;
         
         if (i === activeIndex) {
-            // 設定為運作中狀態 (綠色 圈)
             lamp.innerText = "○";
-            lamp.classList.remove("lamp-fail");
-            lamp.classList.add("lamp-ok");
+            lamp.className = "status-lamp lamp-ok";
+            anyRunning = true; // 👈 有一台在跑
         } else {
-            // 設定為停止狀態 (紅色 叉)
             lamp.innerText = "×";
-            lamp.classList.remove("lamp-ok");
-            lamp.classList.add("lamp-fail");
+            lamp.className = "status-lamp lamp-fail";
         }
+    }
+
+    // 👇 同步更新「運轉狀態」
+    updateRunStatus(anyRunning);
+}
+
+
+
+function updateRunStatus(isRunning) {
+    const statusEl = document.getElementById("run-status");
+    if (!statusEl) return;
+
+    if (isRunning) {
+        statusEl.innerText = "yes";
+        statusEl.className = "v-green";
+    } else {
+        statusEl.innerText = "no";
+        statusEl.className = "v-red";
     }
 }
 
-// --- 測試用：模擬生產線運轉 (實際串接時請刪除下方程式碼) ---
+// 模擬生產線運轉計時器（僅保留一個）
 let currentStep = 0;
 setInterval(() => {
-    console.log(`目前運作設備：${currentStep}`);
     updateActiveDevice(currentStep);
-    
-    currentStep = (currentStep + 1) % 5; // 循環 0 -> 1 -> 2 -> 3 -> 4 -> 0
-}, 2000); // 每 2 秒切換下一個設備
+    currentStep = (currentStep + 1) % 5;
+}, 2000);
+
+// --- 4. 監聽載入 ---
+window.addEventListener("load", initUI);

@@ -3,8 +3,8 @@ const canvas = document.getElementById('visionCanvas');
 const ctx = canvas.getContext('2d');
 
 //原始解析度
-const RAW_W = 1280;
-const RAW_H = 720;
+const RAW_W = 640;
+const RAW_H = 480;
 
 async function updateVision() {
     try {

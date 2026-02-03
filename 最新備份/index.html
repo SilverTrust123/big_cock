@@ -5,34 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>專題</title>
     <link rel="stylesheet" href="mainUI.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-wrapper">
         <header class="top-section">
             <div class="header-main-row">
-                <h1 class="brand-logo">name</h1>
+                <h1 class="brand-logo">機台監控</h1>
                 
                 <nav class="nav-menu">
-                    <button class="nav-btn active-tab" onclick="changePage(1)">Icon set by</button>
+                    <a href="index.html" class="nav-btn active-tab">HomePage</a>
                     <div class="nav-divider"></div>
-                    <button class="nav-btn" onclick="changePage(2)">Photos by</button>
+                    <a href="productline.html" class="nav-btn">ProductLine</a>
                     <div class="nav-divider"></div>
-                    <button class="nav-btn" onclick="changePage(3)">Ren Ran,</button>
+                    <a href="history.html" class="nav-btn">HistoryData</a>
                     <div class="nav-divider"></div>
-                    <button class="nav-btn" onclick="changePage(4)">Annie Sprat,</button>
+                    <a href="monitor.html" class="nav-btn">Secure Monitor</a>
                     <div class="nav-divider"></div>
-                    <button class="nav-btn" onclick="changePage(5)">Nahil Naseer</button>
+                    <a href="page2.html" class="nav-btn">Nahil Naseer</a>
                 </nav>
             </div>
             <div class="header-divider"></div>
             <div class="status-summary-bar">
                 <div class="summary-item">
                     <p class="summary-label">運轉狀態</p>
-                    <p class="summary-val"><span class="v-green">yes</span> / <span class="v-red">no</span></p>
+                    <p class="summary-val">
+    <span id="run-status" class="v-red">no</span>
+</p>
                 </div>
                 <div class="summary-item">
                     <p class="summary-label">設備連接</p>
-                    <p class="summary-val"><span class="v-green">yes</span> / <span class="v-red">no</span></p>
+                    <p class="summary-val">
+    <span id="run-status" class="v-red">no</span>
+</p>
+
                 </div>
                 <div class="summary-item">
                     <p class="summary-label">製程時間</p>
@@ -91,7 +97,7 @@
                 </div>
 
                 <div class="gauge-card">
-                    <h2 class="gauge-title g-pm-text">PM2.5</h2>
+                    <h2 class="gauge-title g-pm-text">pollution</h2>
                     <div class="gauge-svg-wrapper">
                         <svg viewBox="0 0 100 60">
                             <path class="gauge-base-ring" d="M10,50 A40,40 0 1,1 90,50" />

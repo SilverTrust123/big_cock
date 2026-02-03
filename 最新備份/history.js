@@ -17,32 +17,26 @@ function initChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
+            // ✨ 新增座標軸設定
             scales: {
                 x: {
                     title: {
                         display: true,
-                        text: '時間',
+                        text: '時間', // 橫軸固定為時間
                         color: '#444',
-                        // ✨ 放大橫軸標題文字
-                        font: { size: 15, weight: 'bold' } 
-                    },
-                    ticks: {
-                        // ✨ 放大橫軸時間刻度文字
-                        font: { size: 14 } 
+                        font: { size: 14, weight: 'bold' }
                     }
                 },
                 y: {
                     title: {
                         display: true,
-                        text: '數值',
+                        text: '數值', // 預設文字，稍後動態更新
                         color: '#444',
-                        // ✨ 放大縱軸單位文字
-                        font: { size: 15, weight: 'bold' } 
+                        font: { size: 14, weight: 'bold' }
                     },
-                    ticks: {
-                        // ✨ 放大縱軸數據刻度文字
-                        font: { size: 14 } 
-                    }
+                    // 如果你希望設定固定的上下限，可以取消下面註解
+                    // min: 0,
+                    // max: 100 
                 }
             }
         }

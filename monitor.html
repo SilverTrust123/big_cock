@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專題</title>
+
+    <link rel="stylesheet" href="monitor.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="main-container">
+
+    <!-- ===== Header ===== -->
+    <header class="top-section">
+        <div class="header-main-row">
+            <h1 class="brand-logo">監控畫面</h1>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-btn">HomePage</a>
+                <div class="nav-divider"></div>
+                <a href="productline.html" class="nav-btn">ProductLine</a>
+                <div class="nav-divider"></div>
+                <a href="history.html" class="nav-btn">HistoryData</a>
+                <div class="nav-divider"></div>
+                <a href="monitor.html" class="nav-btn active-tab">Secure Monitor</a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-btn">Nahil Naseer</a>
+            </nav>
+        </div>
+
+        <div class="header-divider"></div>
+    </header>
+
+    <!-- ===== Main Content ===== -->
+    <main class="content-wrapper">
+
+        <!-- ===== 右側看板 ===== -->
+ <section class="board-section">
+    <div class="board-container">
+        <img src="Secure.png" class="board-image" alt="看板">
+        
+        <div class="board-overlay">
+            <div class="overlay-item">
+                <span class="label">人數</span>
+                <span class="value" id="people-count">0</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+</div>
+
+<script src="monitor.js"></script>
+</body>
+</html>
