@@ -2,50 +2,45 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>視覺監控系統</title>
+    <title>監測</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; }
-        .monitor-container {
-            position: relative;
-            width: 90%;
-            max-width: 1280px;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border: 2px solid #444;
-            margin-top: 20px;
+        body { 
+            background: #121212; 
+            color: white; 
+            font-family: "Microsoft JhengHei", sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
         }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .info-card {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .dashboard {
-            margin-top: 15px;
-            padding: 15px;
-            background: #333;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 1280px;
-            display: flex;
-            justify-content: space-around;
+        .count-display {
+            font-size: 80px;
+            font-weight: bold;
+            color: #00ff88;
+            margin: 20px 0;
         }
-        .status-danger { color: #ff4d4d; font-weight: bold; animation: blink 1s infinite; }
-        .status-safe { color: #00ff00; }
+        .status-text { font-size: 20px; color: #aaa; }
+        .danger-alert { color: #ff4d4d; animation: blink 1s infinite; }
+        
         @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-    <div class="monitor-container">
-        <canvas id="visionCanvas"></canvas>
-    </div>
-
-    <div class="dashboard" id="dataDisplay">
-        <div>設備: <span id="devId">--</span></div>
-        <div>人數: <span id="pCount">0</span></div>
-        <div>狀態: <span id="alarmStatus">連線中...</span></div>
+    <div class="info-card">
+        <div class="status-text">當前偵測人數</div>
+        <div id="personCount" class="count-display">0</div>
+        <div id="systemStatus" class="status-text">連線中...</div>
+        <div id="updateTime" style="font-size: 12px; color: #555; margin-top: 20px;">--</div>
     </div>
 
     <script src="testcam.js"></script>

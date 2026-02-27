@@ -1,0 +1,126 @@
+/* ===== 左右分割 ===== */
+.content-wrapper {
+    display: flex;
+    background: rgba(255,255,255,0.6);
+    margin: 10px 60px 15px 60px;
+    border-radius: 10px;
+}
+
+/* ===== 左側控制區 ===== */
+.control-section {
+    flex: 1.2;
+    display: flex;
+    padding: 40px;
+    gap: 30px;
+}
+
+/* 側邊選單 */
+.machine-menu {
+    width: 70px;
+    background: #6f6f6f;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    gap: 20px;
+}
+
+.menu-item {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.menu-item img {
+    width: 70%;
+}
+
+.menu-item.active {
+    border: 3px solid #4aa3ff;
+}
+
+/* 機台顯示區 */
+.machine-panel {
+    flex: 1;
+}
+
+.machine-title {
+    background: #4a4a4a;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 10px 30px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 25px;
+}
+
+.machine-image img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* ===== 右側控制板 ===== */
+.control-board {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-bg img {
+    height: 90%;
+}
+
+.board-content {
+    position: absolute;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* 控制列 */
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.control-label {
+    background: #1e66d0;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.control-adjust {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.control-adjust button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.time-box {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
