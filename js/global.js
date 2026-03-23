@@ -252,6 +252,7 @@ function initSettingsSidebar() {
         `);
     }
 
+    
     // if (!document.getElementById('settings-sidebar')) {
     //     const sidebarHTML = `
     //         <div id="sidebar-overlay" class="sidebar-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:9000;"></div>
