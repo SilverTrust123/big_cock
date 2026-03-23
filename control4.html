@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>專題</title>
 
-    <link rel="stylesheet" href="control.css">
+    <link rel="stylesheet" href="control4.css">
     <link rel="stylesheet" href="common.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -40,7 +40,7 @@
     <section class="control-section">
 
         <div class="machine-menu">
-    <a href="control.html" class="menu-item active">
+    <a href="control.html" class="menu-item">
         <img src="picture/transfer.png">
     </a>
     <a href="control2.html" class="menu-item">
@@ -49,7 +49,7 @@
     <a href="control3.html" class="menu-item">
         <img src="picture/transfer2.png">
     </a>
-    <a href="control4.html" class="menu-item">
+    <a href="control4.html" class="menu-item active">
         <img src="picture/rotate.png">
     </a>
     <a href="control5.html" class="menu-item">
@@ -63,12 +63,10 @@
         <!-- 輸送機區塊 -->
         <div class="machine-panel">
 
-            <div class="machine-title">輸送機1</div>
+            <div class="machine-title">旋轉缸</div>
 
             <div class="machine-image">
-                <img src="picture/machine1-1.png">
-
-                <img src="picture/metal.png" class="metal-overlay">
+                <img src="picture/machine5-1.png">
             </div>
 
         </div>
@@ -77,7 +75,6 @@
 
     <!-- ===== 右側控制看板 ===== -->
     <section class="control-board">
-        
 
         <div class="board-bg">
             <img src="picture/monitor.png">
@@ -86,7 +83,7 @@
         <div class="board-content">
 
             <div class="control-row">
-                <div class="control-label">確認工作時間</div>
+                <div class="control-label">機械臂向下停止時間</div>
                 <div class="control-adjust">
                     <button>-</button>
                     <div class="time-box">5.0 sec</div>
@@ -95,10 +92,37 @@
             </div>
 
             <div class="control-row">
-                <div class="control-label">輸送帶停止時間</div>
+                <div class="control-label">真空等待時間</div>
                 <div class="control-adjust">
                     <button>-</button>
-                    <div class="time-box">0.5 sec</div>
+                    <div class="time-box">1.0 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+
+                        <div class="control-row">
+                <div class="control-label">旋轉等待時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">1.0 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+
+                        <div class="control-row">
+                <div class="control-label">機械臂向下等待時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">1.0 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+
+                        <div class="control-row">
+                <div class="control-label">放真空等待時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">1.0 sec</div>
                     <button>+</button>
                 </div>
             </div>

@@ -1,107 +1,137 @@
-let mainChart = null;
-let currentMode = 'temp'; // 預設顯示溫度
+/**
+ * js/history.js - 歷史數據折線圖邏輯
+ * 功能：每 10 秒自動從 localStorage 同步主頁傳來的最新數據
+ */
 
+let mainChart = null;
+let currentMode = 'temp'; // 預設顯示模式
+
+// --- 1. 圖表配置定義 ---
 const configs = {
-    temp: { label: 'temperature', color: '#b24b4b', key: 'temp', min: 0, max: 50, unit: '溫度 (°C)' },
-    humi: { label: 'humidity', color: '#e08e45', key: 'humi', min: 0, max: 100, unit: '濕度 (%)' },
-    co2: { label: 'CO2', color: '#d4af37', key: 'co2', min: 400, max: 1000, unit: 'CO2 (ppm)' },
-    pm: { label: 'PM2.5', color: '#763dc6', key: 'pm', min: 0, max: 30, unit: '污染 (μg/m³)' }
+    temp:  { label: 'Temperature 1', color: '#b24b4b', key: 'temp',  unit: '溫度 1 (°C)' },
+    humi:  { label: 'Humidity 1',    color: '#e08e45', key: 'humi',  unit: '濕度 1 (%)' },
+    temp2: { label: 'Temperature 2', color: '#ff6b6b', key: 'temp2', unit: '溫度 2 (°C)' },
+    humi2: { label: 'Humidity 2',    color: '#c08552', key: 'humi2', unit: '濕度 2 (%)' },
+    co2:   { label: 'CO2 Concentration', color: '#d4af37', key: 'co2', unit: 'CO2 (ppm)' },
+    pm:    { label: 'PM2.5',         color: '#763dc6', key: 'pm',    unit: '污染 (μg/m³)' },
+    power: { label: 'Power Usage',   color: '#2d6a4f', key: 'power', unit: '電流 (kW)' }
 };
 
+/**
+ * 初始化圖表
+ */
 function initChart() {
-    const ctx = document.getElementById('historyChart').getContext('2d');
+    const canvas = document.getElementById('historyChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     mainChart = new Chart(ctx, {
         type: 'line',
-        data: { labels: [], datasets: [{ data: [], borderWidth: 3, tension: 0.3 }] },
+        data: { 
+            labels: [], 
+            datasets: [{ 
+                data: [], 
+                borderWidth: 3, 
+                tension: 0.3,
+                fill: false,           // 僅保留折線
+                backgroundColor: 'transparent',
+                pointRadius: 4,
+                pointBackgroundColor: '#fff'
+            }] 
+        },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            animation: {
+                duration: 800 // 設定平滑更新動畫
+            },
+            plugins: { 
+                legend: { display: false },
+                tooltip: { mode: 'index', intersect: false }
+            },
             scales: {
                 x: {
-                    title: {
-                        display: true,
-                        text: '時間',
-                        color: '#444',
-                        // ✨ 放大橫軸標題文字
-                        font: { size: 15, weight: 'bold' } 
-                    },
-                    ticks: {
-                        // ✨ 放大橫軸時間刻度文字
-                        font: { size: 14 } 
-                    }
+                    title: { display: true, text: '時間', font: { size: 14, weight: 'bold' } }
                 },
                 y: {
-                    title: {
-                        display: true,
-                        text: '數值',
-                        color: '#444',
-                        // ✨ 放大縱軸單位文字
-                        font: { size: 15, weight: 'bold' } 
-                    },
-                    ticks: {
-                        // ✨ 放大縱軸數據刻度文字
-                        font: { size: 14 } 
-                    }
+                    title: { display: true, text: '數值', font: { size: 14, weight: 'bold' } },
+                    beginAtZero: false
                 }
             }
         }
     });
-    updateChartDisplay(); 
-    // 在 initChart() 的最後面加入，確保初始化時按鈕就有顏色
-document.querySelector('[data-target="temp"]').classList.add('active-temp');
+
+    // 第一次載入
+    updateChartData(); 
 }
 
-/** 更新圖表內容、顏色與外框 */
-// ... (維持上次提供的 configs 與 mainChart 初始化邏輯) ...
-
-// 確保 updateChartDisplay 會根據目前寬高重新計算圖表大小
-function updateChartDisplay() {
+/**
+ * 核心功能：從 localStorage 讀取最新數據並更新圖表
+ */
+function updateChartData() {
     const rawData = localStorage.getItem('sensorHistory');
     if (!rawData || !mainChart) return;
 
-    const history = JSON.parse(rawData);
-    const config = configs[currentMode];
+    let history;
+    try {
+        history = JSON.parse(rawData);
+    } catch (e) {
+        console.error("解析歷史數據失敗", e);
+        return;
+    }
 
-    mainChart.data.labels = history.map(d => d.time);
-    mainChart.data.datasets[0].data = history.map(d => d[config.key]);
-    mainChart.data.datasets[0].borderColor = config.color;
+    const config = configs[currentMode];
+    if (!config) return;
+
+    // 更新標籤 (時間軸) 與 數據點
+    mainChart.data.labels = history.map(d => d.time || '');
+    mainChart.data.datasets[0].data = history.map(d => d[config.key] ?? 0);
     
-    // ✨ 動態更新 y 軸標題
+    // 更新顏色與標題
+    mainChart.data.datasets[0].borderColor = config.color;
+    mainChart.data.datasets[0].pointBorderColor = config.color;
     mainChart.options.scales.y.title.text = config.unit;
 
-    // UI 配色連動
-    document.getElementById('current-chart-label').innerText = config.label;
-    document.getElementById('current-chart-label').style.color = config.color;
-    document.getElementById('main-card').style.borderColor = config.color;
+    // 更新 UI 文字標籤
+    const labelEl = document.getElementById('current-chart-label');
+    if (labelEl) {
+        labelEl.innerText = config.label;
+        labelEl.style.color = config.color;
+    }
 
+    // 執行更新動畫
     mainChart.update();
+    console.log(`[History] 圖表已同步最新數據 (${currentMode})`);
 }
 
-// 綁定按鈕點擊事件
-// 綁定按鈕點擊事件
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const target = e.target.getAttribute('data-target');
+/**
+ * 綁定按鈕切換事件
+ */
+function bindTabEvents() {
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const target = e.currentTarget.getAttribute('data-target');
+            if (!configs[target]) return;
 
-        // 1. 移除所有按鈕的 active 相關 class
-        document.querySelectorAll('.tab-btn').forEach(b => {
-            b.classList.remove('active', 'active-temp', 'active-humi', 'active-co2', 'active-pm');
+            // 切換 Active 狀態
+            buttons.forEach(b => {
+                const colorClasses = Object.keys(configs).map(key => `active-${key}`);
+                b.classList.remove('active', ...colorClasses);
+            });
+            e.currentTarget.classList.add('active', `active-${target}`);
+
+            // 切換模式並立即更新
+            currentMode = target;
+            updateChartData();
         });
-
-        // 2. 根據當前 target 加入對應的顏色 class
-        e.target.classList.add(`active-${target}`);
-        
-        // 為了相容性，也可以保留基本的 active class
-        e.target.classList.add('active');
-
-        // 3. 切換模式並重繪圖表
-        currentMode = target;
-        updateChartDisplay();
     });
+}
+
+// --- 關鍵設定：每 10 秒執行一次數據同步 ---
+setInterval(updateChartData, 10000); 
+
+window.addEventListener('load', () => {
+    initChart();
+    bindTabEvents();
 });
-
-// 每 10 秒自動同步一次 localStorage
-setInterval(updateChartDisplay, 10000);
-
-window.addEventListener('load', initChart);

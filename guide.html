@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>專題</title>
 
-    <link rel="stylesheet" href="history.css">
+    <link rel="stylesheet" href="guide.css">
     <link rel="stylesheet" href="common.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -16,7 +16,7 @@
     <!-- ===== Header ===== -->
     <header class="top-section">
         <div class="header-main-row">
-            <h1 class="brand-logo">歷史折線圖</h1>
+            <h1 class="brand-logo">設備導覽</h1>
 
             <nav class="nav-menu">
     <a href="index.html" class="nav-btn">HomePage</a>
@@ -34,7 +34,7 @@
 
     <div class="nav-divider"></div>
     <div class="nav-item-dropdown">
-    <a href="history.html" class="nav-btn active-tab">HistoryData</a>
+    <a href="history.html" class="nav-btn">HistoryData</a>
     <div class="dropdown-content">
             <a href="sensorhistory.html" class="dropdown-link">
                 <span class="link-text">Sensor history</span>
@@ -45,7 +45,7 @@
 
     <div class="nav-divider"></div>
     <div class="nav-item-dropdown">
-    <a href="log.html" class="nav-btn">Log Report</a>
+    <a href="log.html" class="nav-btn active-tab">Log Report</a>
         <div class="dropdown-content">
             <a href="report.html" class="dropdown-link">
                 <span class="link-text">Sensor history</span>
@@ -61,30 +61,40 @@
         <div class="header-divider"></div>
     </header>
 
-<main class="content-area">
-    <div class="history-header-row">
-        <div class="chart-tabs">
-    <button class="tab-btn active" data-target="temp">溫度 1 (°C)</button>
-    <button class="tab-btn" data-target="humi">濕度 1 (%)</button>
-    <button class="tab-btn" data-target="temp2">溫度 2 (°C)</button>
-    <button class="tab-btn" data-target="humi2">濕度 2 (%)</button>
-    <button class="tab-btn" data-target="co2">CO2 (ppm)</button>
-    <button class="tab-btn" data-target="pm">污染 (μg/m³)</button>
-    <button class="tab-btn" data-target="power">電流 (kW)</button>
-</div>
-    </div>
-    
-    <div class="single-chart-container">
-        <div class="chart-card-single" id="main-card">
-            <h3 class="card-label" id="current-chart-label">temperature</h3>
-            <div class="chart-wrapper">
-                <canvas id="historyChart"></canvas>
+    <!-- ===== Main Content ===== -->
+<main class="content-wrapper">
+    <div class="guide-carousel">
+        <button class="nav-arrow left" id="prevBtn">
+            <span class="arrow">❮</span>
+        </button>
+
+        <div class="display-container">
+            <div class="image-box">
+                <img src="../picture/realmachine1.png" alt="設備圖片" id="machineImg">
+            </div>
+
+            <div class="info-column">
+                <div class="icon-nav-bar">
+                    <img src="../picture/transfer.png" class="nav-icon" data-index="0" title="輸送帶 1">
+                    <img src="../picture/dragondoor.png" class="nav-icon" data-index="1" title="滑台缸機械臂">
+                    <img src="../picture/transfer2.png" class="nav-icon" data-index="2" title="龍門機械臂">
+                    <img src="../picture/rotate.png" class="nav-icon" data-index="3" title="輸送帶 2">
+                    <img src="../picture/nonmetal.png" class="nav-icon" data-index="4" title="旋轉缸機械臂">
+                </div>
+
+                <div class="info-box" id="infoBox">
+                    <h2 class="info-title">介紹</h2>
+                    <p class="info-text" id="machineDesc">這是設備 1 的詳細介紹內容...</p>
+                </div>
             </div>
         </div>
+
+        <button class="nav-arrow right" id="nextBtn">
+            <span class="arrow">❯</span>
+        </button>
     </div>
 </main>
-    </div>
-    <script src="js/global.js"></script>
-    <script src="js/history.js"></script>
+<script src="js/global.js"></script>
+<script src="js/guide.js"></script>
 </body>
 </html>
