@@ -37,12 +37,10 @@
         bodyPre.innerText = "請求發送中...";
 
         try {
-            // 測試目標路徑 (會由 global.js 自動補齊 http://192.168.1.210:9090)
             const response = await window.fetchWithAuth('/plc/test', { method: 'GET' });
 
             statusSpan.innerText = `${response.status} ${response.statusText}`;
-            
-            // 嘗試讀取內容
+
             const text = await response.text();
             bodyPre.innerText = text;
 

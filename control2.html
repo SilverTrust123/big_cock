@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>專題</title>
 
-    <link rel="stylesheet" href="control.css">
+    <link rel="stylesheet" href="control2.css">
     <link rel="stylesheet" href="common.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -74,39 +74,83 @@
 
 
     <!-- ===== 右側控制看板 ===== -->
-    <section class="control-board">
+<section class="control-board">
+    <div class="board-bg">
+        <img src="picture/monitor.png">
+    </div>
 
-        <div class="board-bg">
-            <img src="picture/monitor.png">
-        </div>
-
-        <div class="board-content">
-
+    <div class="board-content">
+        <div class="func-group">
             <div class="control-row">
-                <div class="control-label">確認工作時間</div>
+                <div class="control-label">機械臂向下等待時間</div>
                 <div class="control-adjust">
                     <button>-</button>
                     <div class="time-box">5 sec</div>
                     <button>+</button>
                 </div>
             </div>
-
             <div class="control-row">
-                <div class="control-label">輸送帶停止時間</div>
+                <div class="control-label">機械臂確保向下時間</div>
                 <div class="control-adjust">
                     <button>-</button>
                     <div class="time-box">0.5 sec</div>
                     <button>+</button>
                 </div>
             </div>
-
+            <div class="control-row">
+                <div class="control-label">夾取工件等待時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">0.5 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
         </div>
 
-    </section>
+        <div class="func-group" style="display: none;">
+            <div class="control-row">
+                <div class="control-label">機械臂到左側停止時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">1.0 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+            <div class="control-row">
+                <div class="control-label">機械臂向下後停止時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">0.5 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+            <div class="control-row">
+                <div class="control-label">放開工件後等待時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">0.5 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+            <div class="control-row">
+                <div class="control-label">機械臂向上停止時間</div>
+                <div class="control-adjust">
+                    <button>-</button>
+                    <div class="time-box">1.0 sec</div>
+                    <button>+</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="nextPageBtn" class="arrow-btn next" title="下一頁">
+            <img src="picture/blue_arrow_right.png" alt="Next">
+        </div>
+    </div>
+</section>
 
 </main>
 </div>
 <script src="js/global.js"></script>
-<script src="js/control.js"></script>
+<script src="js/control2.js"></script>
 </body>
 </html>

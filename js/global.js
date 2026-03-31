@@ -1,12 +1,9 @@
 /**
- * global.js - 全域功能配置 (完整功能還原版)
- * 整合功能：
- * 1. 全域監控系統：同時監控 Webcam (闖入) 與 感測器 (斷線/數值異常)
- * 2. 登入與授權管理：JWT 驗證、自動過期檢查、側邊欄工具
- * 3. 警報與防干擾：統一報警視窗、10秒冷卻機制
+ * global.js - 全域功能配置 (完整功能還原版 + 深色模式新增)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();           // 1. 初始化主題 (新增)
     initErrorModal();      
     initLoginModal();      
     initTimeoutModal();    
@@ -20,17 +17,81 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(checkLoginStatus, 60000); 
 });
 
+// ... 前面的 CONFIG 定義 ...
 const CONFIG = {
-    API_BASE: "http://192.168.1.210:9090",
-    AUTH_KEY: "admin_token",
+    API_BASE: "http://192.168.3.110:9090",
+    AUTH_KEY: "admin_token", // 確保這裡與你儲存 Token 的 Key 一致
     TIME_KEY: "login_timestamp",
     EXPIRE_TIME: 24 * 60 * 60 * 1000,
-    ALERT_COOLDOWN: 10000 // 防干擾冷卻時間：10秒
+    ALERT_COOLDOWN: 10000 
 };
+
+// 在 global.js 的 CONFIG 之後加入這段
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+    let [resource, config] = args;
+    
+    // 如果是呼叫後端 API，且目前有 Token，就自動補上
+    const token = localStorage.getItem(CONFIG.AUTH_KEY);
+    if (token && resource.includes(CONFIG.API_BASE)) {
+        config = config || {};
+        config.headers = {
+            ...config.headers,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+    }
+    return originalFetch(resource, config);
+};
+/**
+ * ✨ 新增：全域認證 Fetch 函式 ✨
+ * 自動從 localStorage 抓取 Token 並放入 Header
+ */
+window.fetchWithAuth = async function(url, options = {}) {
+    // 從 localStorage 取得 token
+    const token = localStorage.getItem(CONFIG.AUTH_KEY);
+    
+    // 準備 Headers，如果 token 存在就加上 Authorization
+    const authHeaders = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    if (token) {
+        // 依照你的後端需求調整，通常是 Bearer ${token}
+        authHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
+    // 合併新的 options
+    const newOptions = {
+        ...options,
+        headers: authHeaders
+    };
+
+    return fetch(url, newOptions);
+};
+
+// ... 後面的主題、監控、Modal 初始化邏輯 ...
 
 // --- 全域狀態變數 ---
 let isAlertActive = false;    // 目前是否正在顯示警報視窗
 let lastAlertTime = 0;        // 上一次警報關閉的時間點
+
+/**
+ * 深色模式邏輯 (新增功能)
+ */
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+function toggleDarkMode() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', targetTheme);
+    localStorage.setItem('theme', targetTheme);
+    console.log(`主題已切換至: ${targetTheme}`);
+}
 
 /**
  * 全域監控主程式：整合所有報警邏輯
@@ -40,32 +101,22 @@ async function startGlobalMonitor() {
     const SENSOR_ENDPOINT = `${CONFIG.API_BASE}/allData/allSenosrData`;
     
     const performChecks = async () => {
-        // 如果目前已經在報警中，或是處於冷卻期內，直接跳過檢查
         if (isAlertActive) return;
         const now = Date.now();
         if (now - lastAlertTime < CONFIG.ALERT_COOLDOWN) return;
 
         try {
-            // 同時抓取 Webcam 與感測器數據
             const [camRes, sensorRes] = await Promise.all([
                 fetch(CAM_ENDPOINT).then(r => r.ok ? r.json() : null).catch(() => null),
                 fetch(SENSOR_ENDPOINT).then(r => r.ok ? r.json() : null).catch(() => null)
             ]);
 
-            // 1. Webcam 闖入偵測 (優先級最高)
             const camInfo = Array.isArray(camRes) ? camRes[0] : camRes;
             if (camInfo && camInfo.personCount > 0) {
                 window.showError(`警告：生產線偵測到人員闖入！(目前：${camInfo.personCount} 人)`);
                 return;
             }
 
-            // 2. 感測器斷線偵測
-            if (!sensorRes) {
-                window.showError("警告：後端連線中斷，檢查網路或電源！");
-                return;
-            }
-
-            // 3. 感測器數值閾值監控 (溫度：40°C / 10°C)
             const temp = sensorRes.temperature ?? 0;
             if (temp > 40.0) {
                 window.showError(`設備過熱警告！目前溫度：${temp.toFixed(1)}°C`);
@@ -78,7 +129,6 @@ async function startGlobalMonitor() {
         }
     };
 
-    // 每 3 秒執行一次全域掃描
     setInterval(performChecks, 3000);
 }
 
@@ -252,33 +302,37 @@ function initSettingsSidebar() {
         `);
     }
 
-    
-    // if (!document.getElementById('settings-sidebar')) {
-    //     const sidebarHTML = `
-    //         <div id="sidebar-overlay" class="sidebar-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:9000;"></div>
-    //         <div id="settings-sidebar" class="settings-sidebar" style="position:fixed; top:0; right:-300px; width:300px; height:100%; background:white; z-index:9001; transition: 0.3s; box-shadow: -5px 0 15px rgba(0,0,0,0.1);">
-    //             <div class="sidebar-header" style="padding: 20px; background: #f8f9fa; border-bottom: 1px solid #eee; display: flex; align-items: center;">
-    //                 <img src="picture/setting.png" alt="icon" style="width:20px; margin-right: 10px;">
-    //                 <h2 style="margin:0; font-size: 18px;">工具列</h2>
-    //             </div>
-    //             <div class="sidebar-menu-item" style="padding: 15px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer;"> 深色模式</div>
-    //             <div class="sidebar-menu-item" style="padding: 15px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer;"> 語言切換</div>
-    //             <div id="sidebar-about-btn" class="sidebar-menu-item" style="background-color:#ffcc80; border-radius:15px; margin:10px 15px; padding:12px 20px; color:#333; cursor:pointer; text-align:left; font-weight: bold;">關於</div>
-    //             <div id="sidebar-login-btn" class="sidebar-menu-item" style="padding: 15px 20px; color:#2ecc71; font-weight:bold; cursor: pointer;">系統登入</div>
-    //             <div id="sidebar-logout-btn" class="sidebar-menu-item" style="padding: 15px 20px; color:#e74c3c; font-weight:bold; display:none; cursor: pointer;">登出系統</div>
-    //             <div id="login-status-text" style="padding:0 20px; font-size:12px; color:#888; margin-top:5px;"></div>
-    //         </div>
+ if (!document.getElementById('settings-sidebar')) {
+    const sidebarHTML = `
+        <div id="sidebar-overlay" class="sidebar-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:9000;"></div>
+        
+        <div id="settings-sidebar" class="settings-sidebar" style="position:fixed; top:0; right:-300px; width:300px; height:100%; background: var(--sidebar-bg, white); z-index:9001; transition: 0.3s; box-shadow: -5px 0 15px rgba(0,0,0,0.1); color: var(--text-color, #333);">
             
-    //         <div id="about-content-page" style="display:none; position:fixed; top:40px; left:10px; right:10px; bottom:10px; background:#f0f2f5; z-index:8000; padding:20px; pointer-events:auto; border-radius: 15px; overflow: hidden;">
-    //             <div style="background:white; height:100%; border-radius:10px; padding:30px; box-shadow:0 2px 10px rgba(0,0,0,0.1); position:relative;">
-    //                 <button id="close-about-page" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:32px; cursor:pointer; color: #888;">&times;</button>
-    //                 <h1 style="font-size:48px; margin:0; color: #333;">關於</h1>
-    //                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-    //                 <p style="font-size: 18px; color: #666; line-height: 1.6;">088</p>
-    //             </div>
-    //         </div>`;
-    //     document.body.insertAdjacentHTML('beforeend', sidebarHTML);
-    // }
+            <div class="sidebar-header" style="padding: 20px; background: var(--sidebar-header-bg, #7f7f7f); border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center;">
+                <img src="picture/setting.png" alt="icon" style="width:20px; margin-right: 10px;">
+                <h2 style="margin:0; font-size: 18px; color: var(--text-color, #333);">工具列</h2>
+            </div>
+            
+            <div id="sidebar-dark-mode-btn" class="sidebar-menu-item" style="padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer;"> 深色模式</div>
+            <div class="sidebar-menu-item" style="padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer;"> 語言切換</div>
+            
+            <div id="sidebar-about-btn" class="sidebar-menu-item" style=" padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); cursor:pointer; text-align:left;;">關於</div>
+            
+            <div id="sidebar-login-btn" class="sidebar-menu-item" style="padding: 15px 20px; color:#2ecc71; font-weight:bold; cursor: pointer;">系統登入</div>
+            <div id="sidebar-logout-btn" class="sidebar-menu-item" style="padding: 15px 20px; color:#e74c3c; font-weight:bold; display:none; cursor: pointer;">登出系統</div>
+            <div id="login-status-text" style="padding:0 20px; font-size:12px; color:#888; margin-top:5px;"></div>
+        </div>
+        
+        <div id="about-content-page" style="display:none; position:fixed; top:40px; left:10px; right:10px; bottom:10px; background: var(--about-page-bg, #f0f2f5); z-index:8000; padding:20px; pointer-events:auto; border-radius: 15px; overflow: hidden;">
+            <div style="background: var(--sidebar-bg, white); height:100%; border-radius:10px; padding:30px; box-shadow:0 2px 10px rgba(0,0,0,0.1); position:relative;">
+                <button id="close-about-page" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:32px; cursor:pointer; color: #888;">&times;</button>
+                <h1 style="font-size:48px; margin:0; color: var(--text-color, #333);">關於</h1>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(0,0,0,0.1);">
+                <p style="font-size: 18px; color: var(--text-sub-color, #666); line-height: 1.6;">088</p>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', sidebarHTML);
+}
 
     const btn = document.getElementById('global-settings-btn');
     const sidebar = document.getElementById('settings-sidebar');
@@ -298,6 +352,9 @@ function initSettingsSidebar() {
     btn.onclick = openSidebar;
     overlay.onclick = closeSidebar;
     
+    // 綁定深色模式切換 (新增)
+    document.getElementById('sidebar-dark-mode-btn').onclick = toggleDarkMode;
+
     document.getElementById('sidebar-about-btn').onclick = () => {
         closeSidebar();
         aboutPage.style.display = 'block';

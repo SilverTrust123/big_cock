@@ -65,7 +65,7 @@
 .machine-title {
     background: #3a3a3a;
     color: white;
-    font-size: clamp(20px, 3vw, 40px);
+    font-size: clamp(20px, 3vw, 45px);
     font-weight: bold;
     padding: 10px 0;
     border-radius: 10px;
@@ -155,13 +155,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap:12px;
 }
 
 /* ✨ 右側藍色標籤與白色數值框統一寬度 */
 .control-label {
     background: #2067d2;
     color: white;
-    padding: 10px 0;
+    padding: 10px;
     border-radius: 8px;
     font-size: clamp(12px, 5vw, 24px);
     font-weight: bold;
@@ -207,3 +208,43 @@
     color: #f08519;
     border: 1px solid #ddd;
 }
+
+.arrow-btn {
+    position: absolute;
+    /* ✨ 關鍵定位：使用 cqw 單位定位在螢幕的右下角 */
+    bottom: -2.5cqw;  /* 距離螢幕底部，隨螢幕縮放 */
+    right: -2.5cqw;   /* 距離螢幕右側，隨螢幕縮放 */
+    
+    /* 大小：設定圖示的大小 */
+    width: 6cqw;   /* 隨螢幕縮放，例如 4cqw 到 8cqw 之間 */
+    height: 6cqw;
+    
+    cursor: pointer;
+    z-index: 10;     /* 確保在所有控制項目之上，可以點擊 */
+    transition: transform 0.2s ease, filter 0.2s ease; /* 新增滑過動畫 */
+}
+
+.arrow-btn img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain; /* 保持圖片比例不變形 */
+    filter: brightness(1); /* 預設亮度 */
+}
+
+.arrow-btn:hover {
+    filter: brightness(1.2) drop-shadow(0 0 5px rgba(74, 163, 255, 0.5));
+}
+
+.arrow-btn:hover img {
+    /* 如果圖檔不夠亮，可以用濾鏡讓它滑過時變更亮藍色 */
+    filter: brightness(1.2) drop-shadow(0 0 3px #4aa3ff); 
+}
+/* 確保分頁容器內的控制列永遠是垂直排列 */
+.func-group {
+    display: flex;
+    flex-direction: column; /* ✨ 關鍵：強制垂直排列 */
+    gap: 0.5cqw;           /* 控制列之間的間距 */
+    width: 100%;
+    align-items: center;    /* 讓內容在容器內水平置中 */
+}
+

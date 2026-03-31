@@ -41,10 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         logListElement.innerHTML = `<li>正在檢索數據 [${type.toUpperCase()}]...</li>`;
 
         try {
-            // 拼接完整 URL：包含 IP + 路徑 + 時間參數
             const endpointUrl = `${endpoints[type]}?${params.toString()}`;
             
-            // 使用 global.js 定義的 window.fetchWithAuth 確保帶入 JWT Token
             const response = await window.fetchWithAuth(endpointUrl, { method: 'GET' });
 
             if (response.status === 403) throw new Error("存取權限不足");

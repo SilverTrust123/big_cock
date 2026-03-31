@@ -83,7 +83,7 @@
     flex: 1;
     background: #dff6f0; /* 淺綠色背景 */
     border-radius: 8px;
-    padding: 40px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* 讓文字從上方開始 */
@@ -91,7 +91,7 @@
 
 .info-title {
     font-size: 3.5rem;
-    color: #fff;
+    color: #080808;
     margin: 0 0 20px 0;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     font-weight: bold;
